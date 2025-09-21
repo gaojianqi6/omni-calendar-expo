@@ -5,6 +5,8 @@ import { Platform } from 'react-native';
 
 import { Explore } from './screens/Explore';
 import { Home } from './screens/Home';
+import { Settings } from './screens/Settings';
+import { HelpFeedback } from './screens/HelpFeedback';
 import { NotFound } from './screens/NotFound';
 
 import { HapticTab } from '@/components/HapticTab';
@@ -46,6 +48,18 @@ const RootStack = createNativeStackNavigator({
   screens: {
     HomeTabs: {
       screen: HomeTabs,
+      options: {
+        headerShown: false,
+      },
+    },
+    Settings: {
+      screen: Settings,
+      options: {
+        headerShown: false,
+      },
+    },
+    HelpFeedback: {
+      screen: HelpFeedback,
       options: {
         headerShown: false,
       },

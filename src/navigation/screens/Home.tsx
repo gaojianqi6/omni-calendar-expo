@@ -1,75 +1,138 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { CommonHeader } from '../../components/common/CommonHeader';
+import { LeftNavigation } from '../../components/common/LeftNavigation';
+import { WeekHeader } from '../../components/calendar/WeekHeader';
+import { CalendarGrid } from '../../components/calendar/CalendarGrid';
+import { MonthPickerModal } from '../../components/calendar/MonthPickerModal';
+import { useAppStore } from '../../store/useAppStore';
+import { CalendarService } from '../../services/calendarService';
 
 export function Home() {
+  const {
+    currentYear,
+    currentMonth,
+    settings,
+    isMonthPickerVisible,
+    setMonthPickerVisible,
+    setCurrentMonth,
+  } = useAppStore();
+
+  const calendarDates = CalendarService.generateCalendarDates(
+    currentYear,
+    currentMonth,
+    settings.showSecondCalendar
+  );
+
+  const handleDatePress = (date: Date) => {
+    console.log('Date pressed:', date);
+    // Handle date selection logic here
+  };
+
+  const handleMonthPickerPress = () => {
+    setMonthPickerVisible(true);
+  };
+
+  const handleMonthSelect = (year: number, month: number) => {
+    setCurrentMonth(year, month);
+  };
+
+  const formatTodayDate = () => {
+    const today = new Date();
+    const dayName = today.toLocaleDateString('en-US', { weekday: 'long' });
+    const dateStr = today.toLocaleDateString('en-US', { 
+      day: 'numeric', 
+      month: 'short', 
+      year: 'numeric' 
+    });
+    return `${dayName} ${dateStr}`;
+  };
+
+  const currentMonthName = CalendarService.getMonthName(currentMonth, settings.language);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">src/navigation/screens/Home.tsx</ThemedText> to
-          see changes. Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      <CommonHeader />
+      
+      <View style={styles.content}>
+        {/* Title Line */}
+        <View style={styles.titleLine}>
+          <Text style={styles.todayText}>{formatTodayDate()}</Text>
+          <TouchableOpacity
+            style={styles.monthPickerButton}
+            onPress={handleMonthPickerPress}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.monthPickerText}>
+              {currentMonthName} {currentYear}
+            </Text>
+            <Ionicons name="chevron-down" size={20} color="#000" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Calendar */}
+        <View style={styles.calendarContainer}>
+          <WeekHeader />
+          <CalendarGrid
+            calendarDates={calendarDates}
+            onDatePress={handleDatePress}
+          />
+        </View>
+      </View>
+
+      {/* Month Picker Modal */}
+      <MonthPickerModal
+        visible={isMonthPickerVisible}
+        onClose={() => setMonthPickerVisible(false)}
+        onSelect={handleMonthSelect}
+        currentYear={currentYear}
+        currentMonth={currentMonth}
+      />
+      
+      {/* Left Navigation Drawer */}
+      <LeftNavigation />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  content: {
+    flex: 1,
+  },
+  titleLine: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  todayText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000',
+  },
+  monthPickerButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  monthPickerText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000',
+    marginRight: 4,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  calendarContainer: {
+    flex: 1,
   },
 });
