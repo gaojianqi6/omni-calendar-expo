@@ -1,14 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { CommonHeader } from '../../components/common/CommonHeader';
-import { LeftNavigation } from '../../components/common/LeftNavigation';
 
 export function HelpFeedback() {
   return (
     <View style={styles.container}>
-      <CommonHeader title="Help & Feedback" />
-      
       <ScrollView style={styles.content}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>📚 Help</Text>
@@ -50,8 +46,6 @@ export function HelpFeedback() {
         </View>
       </ScrollView>
       
-      {/* Left Navigation Drawer */}
-      <LeftNavigation />
     </View>
   );
 }

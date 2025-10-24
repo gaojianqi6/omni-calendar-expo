@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useAppStore } from '../../store/useAppStore';
 
 interface CommonHeaderProps {
   title?: string;
@@ -10,16 +9,14 @@ interface CommonHeaderProps {
 
 export const CommonHeader: React.FC<CommonHeaderProps> = ({
   title = 'Omni Calendar',
-  showLeftToggle = true,
+  showLeftToggle = false,
 }) => {
-  const { toggleLeftDrawer } = useAppStore();
-
   return (
     <View style={styles.container}>
       {showLeftToggle && (
         <TouchableOpacity
           style={styles.leftButton}
-          onPress={toggleLeftDrawer}
+          onPress={() => {}}
           activeOpacity={0.7}
         >
           <Ionicons name="menu" size={24} color="#000" />

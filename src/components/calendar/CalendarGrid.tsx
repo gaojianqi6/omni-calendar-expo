@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { CalendarDate } from '../../types';
+import { CalendarDate } from '../../types/index';
 
 interface CalendarGridProps {
   calendarDates: CalendarDate[];

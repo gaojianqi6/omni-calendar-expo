@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { CommonHeader } from '../../components/common/CommonHeader';
-import { LeftNavigation } from '../../components/common/LeftNavigation';
 import { WeekHeader } from '../../components/calendar/WeekHeader';
 import { CalendarGrid } from '../../components/calendar/CalendarGrid';
 import { MonthPickerModal } from '../../components/calendar/MonthPickerModal';
@@ -89,9 +88,6 @@ export function Home() {
         currentYear={currentYear}
         currentMonth={currentMonth}
       />
-      
-      {/* Left Navigation Drawer */}
-      <LeftNavigation />
     </View>
   );
 }

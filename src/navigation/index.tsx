@@ -7,6 +7,7 @@ import { Explore } from './screens/Explore';
 import { Home } from './screens/Home';
 import { Settings } from './screens/Settings';
 import { HelpFeedback } from './screens/HelpFeedback';
+import { About } from './screens/About';
 import { NotFound } from './screens/NotFound';
 
 import { HapticTab } from '@/components/HapticTab';
@@ -26,7 +27,8 @@ const HomeTabs = createBottomTabNavigator({
       screen: Explore,
       options: {
         headerShown: false,
-        tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        tabBarIcon: ({ color }) => <IconSymbol size={28} name="text.justify" color={color} />,
+        tabBarLabel: 'Menu',
       },
     },
   },
@@ -37,7 +39,7 @@ const HomeTabs = createBottomTabNavigator({
     tabBarStyle: Platform.select({
       ios: {
         // Use a transparent background on iOS to show the blur effect
-        possition: 'absolute',
+        position: 'absolute' as const,
       },
       default: {},
     }),
@@ -55,13 +57,25 @@ const RootStack = createNativeStackNavigator({
     Settings: {
       screen: Settings,
       options: {
-        headerShown: false,
+        headerShown: true,
+        title: 'Settings',
+        headerBackTitle: 'Menu',
       },
     },
     HelpFeedback: {
       screen: HelpFeedback,
       options: {
-        headerShown: false,
+        headerShown: true,
+        title: 'Help & Feedback',
+        headerBackTitle: 'Menu',
+      },
+    },
+    About: {
+      screen: About,
+      options: {
+        headerShown: true,
+        title: 'About',
+        headerBackTitle: 'Menu',
       },
     },
     NotFound: {

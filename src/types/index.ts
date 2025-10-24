@@ -30,9 +30,3 @@ export interface MonthPickerProps {
   currentMonth: number;
 }
 
-export interface LeftNavigationItem {
-  id: string;
-  title: string;
-  icon: string;
-  onPress: () => void;
-}

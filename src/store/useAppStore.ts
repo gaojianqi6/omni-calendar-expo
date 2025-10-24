@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { CalendarSettings } from '../types';
+import { CalendarSettings } from '../types/index';
 
 interface AppState {
   // Calendar settings
@@ -13,15 +13,12 @@ interface AppState {
   currentMonth: number;
   
   // UI state
-  isLeftDrawerOpen: boolean;
   isMonthPickerVisible: boolean;
   
   // Actions
   updateSettings: (settings: Partial<CalendarSettings>) => void;
   setSelectedDate: (date: Date) => void;
   setCurrentMonth: (year: number, month: number) => void;
-  toggleLeftDrawer: () => void;
-  setLeftDrawerOpen: (open: boolean) => void;
   setMonthPickerVisible: (visible: boolean) => void;
 }
 
@@ -38,7 +35,6 @@ export const useAppStore = create<AppState>((set) => ({
   selectedDate: new Date(),
   currentYear: new Date().getFullYear(),
   currentMonth: new Date().getMonth(),
-  isLeftDrawerOpen: false,
   isMonthPickerVisible: false,
   
   updateSettings: (newSettings) =>
@@ -50,11 +46,6 @@ export const useAppStore = create<AppState>((set) => ({
   
   setCurrentMonth: (year, month) =>
     set({ currentYear: year, currentMonth: month }),
-    
-  toggleLeftDrawer: () =>
-    set((state) => ({ isLeftDrawerOpen: !state.isLeftDrawerOpen })),
-    
-  setLeftDrawerOpen: (open) => set({ isLeftDrawerOpen: open }),
   
   setMonthPickerVisible: (visible) => set({ isMonthPickerVisible: visible }),
 }));

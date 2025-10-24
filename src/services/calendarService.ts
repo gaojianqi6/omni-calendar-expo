@@ -1,4 +1,4 @@
-import { CalendarDate } from '../types';
+import { CalendarDate } from '../types/index';
 
 export class CalendarService {
   static generateCalendarDates(

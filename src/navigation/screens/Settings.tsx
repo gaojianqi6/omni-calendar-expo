@@ -1,7 +1,5 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { CommonHeader } from '../../components/common/CommonHeader';
-import { LeftNavigation } from '../../components/common/LeftNavigation';
 import { useAppStore } from '../../store/useAppStore';
 
 export function Settings() {
@@ -25,8 +23,6 @@ export function Settings() {
 
   return (
     <View style={styles.container}>
-      <CommonHeader title="Settings" />
-      
       <ScrollView style={styles.content}>
         {/* Language Section */}
         <View style={styles.section}>
@@ -169,8 +165,6 @@ export function Settings() {
         </View>
       </ScrollView>
       
-      {/* Left Navigation Drawer */}
-      <LeftNavigation />
     </View>
   );
 }
