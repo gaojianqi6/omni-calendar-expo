@@ -21,7 +21,8 @@ export function Home() {
   const calendarDates = CalendarService.generateCalendarDates(
     currentYear,
     currentMonth,
-    settings.showSecondCalendar
+    settings.showSecondCalendar,
+    settings.language
   );
 
   const handleDatePress = (date: Date) => {
@@ -39,13 +40,7 @@ export function Home() {
 
   const formatTodayDate = () => {
     const today = new Date();
-    const dayName = today.toLocaleDateString('en-US', { weekday: 'long' });
-    const dateStr = today.toLocaleDateString('en-US', { 
-      day: 'numeric', 
-      month: 'short', 
-      year: 'numeric' 
-    });
-    return `${dayName} ${dateStr}`;
+    return CalendarService.formatDate(today, settings.language);
   };
 
   const currentMonthName = CalendarService.getMonthName(currentMonth, settings.language);

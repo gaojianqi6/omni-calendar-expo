@@ -9,11 +9,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MonthPickerProps } from '../../types';
-
-const months = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-];
+import { useAppStore } from '../../store/useAppStore';
+import { CalendarService } from '../../services/calendarService';
 
 export const MonthPickerModal: React.FC<MonthPickerProps> = ({
   visible,
@@ -22,8 +19,13 @@ export const MonthPickerModal: React.FC<MonthPickerProps> = ({
   currentYear,
   currentMonth,
 }) => {
+  const { settings } = useAppStore();
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+
+  const months = Array.from({ length: 12 }, (_, i) => 
+    CalendarService.getMonthName(i, settings.language)
+  );
 
   const handleConfirm = () => {
     onSelect(selectedYear, selectedMonth);
@@ -52,16 +54,22 @@ export const MonthPickerModal: React.FC<MonthPickerProps> = ({
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
               <Ionicons name="close" size={24} color="#000" />
             </TouchableOpacity>
-            <Text style={styles.title}>Select Month & Year</Text>
+            <Text style={styles.title}>
+              {settings.language === 'zh' ? '选择月份和年份' : 'Select Month & Year'}
+            </Text>
             <TouchableOpacity onPress={handleConfirm} style={styles.confirmButton}>
-              <Text style={styles.confirmText}>Done</Text>
+              <Text style={styles.confirmText}>
+                {settings.language === 'zh' ? '完成' : 'Done'}
+              </Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.content}>
             {/* Year Selection */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Year</Text>
+              <Text style={styles.sectionTitle}>
+                {settings.language === 'zh' ? '年份' : 'Year'}
+              </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View style={styles.yearContainer}>
                   {generateYears().map((year) => (
@@ -89,7 +97,9 @@ export const MonthPickerModal: React.FC<MonthPickerProps> = ({
 
             {/* Month Selection */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Month</Text>
+              <Text style={styles.sectionTitle}>
+                {settings.language === 'zh' ? '月份' : 'Month'}
+              </Text>
               <View style={styles.monthGrid}>
                 {months.map((month, index) => (
                   <TouchableOpacity

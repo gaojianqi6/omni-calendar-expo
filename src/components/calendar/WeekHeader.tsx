@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-
-const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+import { useAppStore } from '../../store/useAppStore';
+import { CalendarService } from '../../services/calendarService';
 
 export const WeekHeader: React.FC = () => {
+  const { settings } = useAppStore();
+  const weekDays = CalendarService.getWeekDayNames(settings.language);
+
   return (
     <View style={styles.container}>
       {weekDays.map((day, index) => (

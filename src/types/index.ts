@@ -11,6 +11,9 @@ export interface CalendarDate {
   isCurrentMonth: boolean;
   isToday: boolean;
   lunarDate?: string;
+  lunarMonth?: string;
+  isHoliday?: boolean;
+  isWorkDay?: boolean;
   events?: CalendarEvent[];
 }
 
