@@ -1,6 +1,14 @@
 import { CalendarDate } from '../types/index';
 import { Solar, I18n, HolidayUtil } from 'lunar-typescript';
 
+/**
+ * Set the language for lunar-typescript
+ * @param language en | zh
+ */
+function setLunarLanguage(language: 'en' | 'zh' = 'en') {
+  I18n.setMessages(language === 'zh' ? 'chs' : 'en', {});
+}
+
 export class CalendarService {
   static generateCalendarDates(
     year: number,
@@ -61,8 +69,7 @@ export class CalendarService {
   
   static getLunarDate(date: Date, language: 'en' | 'zh' = 'en'): string {
     try {
-      // Set the language for lunar-typescript
-      I18n.setLanguage(language);
+      setLunarLanguage(language);
       
       // Create Solar date from the given Date
       const solar = Solar.fromDate(date);
@@ -139,7 +146,7 @@ export class CalendarService {
   
   static getLunarMonthName(date: Date, language: 'en' | 'zh' = 'en'): string {
     try {
-      I18n.setLanguage(language);
+      setLunarLanguage(language);
       const solar = Solar.fromDate(date);
       const lunar = solar.getLunar();
       
@@ -158,7 +165,7 @@ export class CalendarService {
   
   static getLunarYearInfo(date: Date, language: 'en' | 'zh' = 'en'): { year: string; zodiac: string } {
     try {
-      I18n.setLanguage(language);
+      setLunarLanguage(language);
       const solar = Solar.fromDate(date);
       const lunar = solar.getLunar();
       
@@ -206,6 +213,108 @@ export class CalendarService {
       // Fallback to basic weekday check
       const dayOfWeek = date.getDay();
       return dayOfWeek >= 1 && dayOfWeek <= 5;
+    }
+  }
+  
+  static getAuspiciousActivities(date: Date, language: 'en' | 'zh' = 'en'): { good: string[]; bad: string[] } {
+    try {
+      setLunarLanguage(language);
+      const solar = Solar.fromDate(date);
+      const lunar = solar.getLunar();
+      
+      const dayYi = lunar.getDayYi();
+      const dayJi = lunar.getDayJi();
+      
+      return {
+        good: dayYi || [],
+        bad: dayJi || []
+      };
+    } catch (error) {
+      console.error('Error getting auspicious activities:', error);
+      return { good: [], bad: [] };
+    }
+  }
+  
+  static getDetailedLunarInfo(date: Date, language: 'en' | 'zh' = 'en'): {
+    lunarMonth: string;
+    lunarDay: string;
+    lunarYear: string;
+    zodiac: string;
+    ganZhi: string;
+    naYin: string;
+  } {
+    try {
+      setLunarLanguage(language);
+      const solar = Solar.fromDate(date);
+      const lunar = solar.getLunar();
+      
+      return {
+        lunarMonth: `${language === 'zh' ? lunar.getMonthInChinese() : lunar.getMonth()}`,
+        lunarDay: `${language === 'zh' ? lunar.getDayInChinese() : lunar.getDay()}`,
+        lunarYear: `${language === 'zh' ? lunar.getYearInChinese() : lunar.getYear()}`,
+        zodiac: lunar.getYearShengXiao(),
+        ganZhi: lunar.getYearInGanZhi(),
+        naYin: lunar.getYearNaYin()
+      };
+    } catch (error) {
+      console.error('Error getting detailed lunar info:', error);
+      return {
+        lunarMonth: '',
+        lunarDay: '',
+        lunarYear: '',
+        zodiac: '',
+        ganZhi: '',
+        naYin: ''
+      };
+    }
+  }
+  
+  static getDaysPassedSince(date: Date): number {
+    const today = new Date();
+    const diffTime = Math.abs(today.getTime() - date.getTime());
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  }
+  
+  static getUpcomingHolidays(date: Date, language: 'en' | 'zh' = 'en'): {
+    name: string;
+    date: Date;
+    daysUntil: number;
+  }[] {
+    try {
+      const currentYear = date.getFullYear();
+      const holidays = [
+        { name: language === 'zh' ? '春节' : 'Spring Festival', month: 2, day: 10 }, // Example date
+        { name: language === 'zh' ? '清明节' : 'Qingming Festival', month: 4, day: 5 },
+        { name: language === 'zh' ? '端午节' : 'Dragon Boat Festival', month: 6, day: 14 },
+        { name: language === 'zh' ? '中秋节' : 'Mid-Autumn Festival', month: 9, day: 17 },
+        { name: language === 'zh' ? '国庆节' : 'National Day', month: 10, day: 1 },
+        { name: language === 'zh' ? '万圣节' : 'Halloween', month: 10, day: 31 },
+        { name: language === 'zh' ? '圣诞节' : 'Christmas', month: 12, day: 25 },
+        { name: language === 'zh' ? '元旦' : 'New Year', month: 1, day: 1 },
+      ];
+      
+      const upcoming = holidays.map(holiday => {
+        let holidayDate = new Date(currentYear, holiday.month - 1, holiday.day);
+        
+        // If the holiday has passed this year, get next year's date
+        if (holidayDate < date) {
+          holidayDate = new Date(currentYear + 1, holiday.month - 1, holiday.day);
+        }
+        
+        const daysUntil = Math.ceil((holidayDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+        
+        return {
+          name: holiday.name,
+          date: holidayDate,
+          daysUntil
+        };
+      });
+      
+      // Sort by days until and return only the next 3
+      return upcoming.sort((a, b) => a.daysUntil - b.daysUntil).slice(0, 3);
+    } catch (error) {
+      console.error('Error getting upcoming holidays:', error);
+      return [];
     }
   }
 }

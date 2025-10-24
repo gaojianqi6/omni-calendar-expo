@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { CommonHeader } from '../../components/common/CommonHeader';
 import { WeekHeader } from '../../components/calendar/WeekHeader';
 import { CalendarGrid } from '../../components/calendar/CalendarGrid';
 import { MonthPickerModal } from '../../components/calendar/MonthPickerModal';
+import { DateInfoDisplay } from '../../components/calendar/DateInfoDisplay';
 import { useAppStore } from '../../store/useAppStore';
 import { CalendarService } from '../../services/calendarService';
 
@@ -17,6 +18,8 @@ export function Home() {
     setMonthPickerVisible,
     setCurrentMonth,
   } = useAppStore();
+  
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const calendarDates = CalendarService.generateCalendarDates(
     currentYear,
@@ -26,8 +29,15 @@ export function Home() {
   );
 
   const handleDatePress = (date: Date) => {
-    console.log('Date pressed:', date);
-    // Handle date selection logic here
+    // If clicking on the same date, clear the selection
+    if (selectedDate && 
+        date.getDate() === selectedDate.getDate() &&
+        date.getMonth() === selectedDate.getMonth() &&
+        date.getFullYear() === selectedDate.getFullYear()) {
+      setSelectedDate(null);
+    } else {
+      setSelectedDate(date);
+    }
   };
 
   const handleMonthPickerPress = () => {
@@ -36,6 +46,8 @@ export function Home() {
 
   const handleMonthSelect = (year: number, month: number) => {
     setCurrentMonth(year, month);
+    // Clear selection when changing months
+    setSelectedDate(null);
   };
 
   const formatTodayDate = () => {
@@ -71,7 +83,13 @@ export function Home() {
           <CalendarGrid
             calendarDates={calendarDates}
             onDatePress={handleDatePress}
+            selectedDate={selectedDate}
           />
+        </View>
+        
+        {/* Date Information Display */}
+        <View style={styles.dateInfoContainer}>
+          <DateInfoDisplay selectedDate={selectedDate} />
         </View>
       </View>
 
@@ -125,5 +143,9 @@ const styles = StyleSheet.create({
   },
   calendarContainer: {
     flex: 1,
+  },
+  dateInfoContainer: {
+    flex: 1,
+    backgroundColor: '#f9f9f9',
   },
 });
