@@ -1,0 +1,41 @@
+{
+  "common": {
+    "appName": "Rātaka Omni",
+    "welcome": "Nau mai",
+    "loading": "E uta ana...",
+    "error": "Hapa",
+    "success": "Angitu",
+    "save": "Tiaki",
+    "cancel": "Whakakore",
+    "delete": "Mukua",
+    "edit": "Whakatika",
+    "create": "Hanga",
+    "close": "Katia",
+    "confirm": "Whakaaetia",
+    "back": "Hoki",
+    "next": "Hei a muri",
+    "previous": "I mua"
+  },
+  "calendar": {
+    "title": "Rātaka",
+    "today": "I tēnei rā",
+    "month": "Marama",
+    "week": "Wiki",
+    "day": "Rā",
+    "year": "Tau"
+  },
+  "settings": {
+    "title": "Tautuhinga",
+    "language": "Reo",
+    "theme": "Kaupapa",
+    "notifications": "Pānui"
+  },
+  "tasks": {
+    "title": "Mahi",
+    "addTask": "Tāpiri Mahi",
+    "completed": "Kua oti",
+    "pending": "E tatari ana",
+    "inProgress": "E haere ana"
+  }
+}
+

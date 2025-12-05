@@ -1,13 +1,19 @@
 import 'react-native-reanimated';
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { PaperProvider } from 'react-native-paper';
+import './i18n/config';
 
 import { Colors } from './constants/Colors';
 import { Navigation } from './navigation';
+import { queryClient } from './config/queryClient';
+import { ClerkProviderWrapper } from './config/clerk';
+import { themes } from './config/themes';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,7 +28,7 @@ export function App() {
     return null;
   }
 
-  const theme =
+  const navigationTheme =
     colorScheme === 'dark'
       ? {
           ...DarkTheme,
@@ -33,21 +39,30 @@ export function App() {
           colors: { ...DefaultTheme.colors, primary: Colors[colorScheme ?? 'light'].tint },
         };
 
+  // Select Paper theme based on color scheme
+  const paperTheme = colorScheme === 'dark' ? themes.dark : themes.light;
+
   return (
-    <SafeAreaProvider>
-      <Navigation
-        theme={theme}
-        linking={{
-          enabled: 'auto',
-          prefixes: [
-            // Change the scheme to match your app's scheme defined in app.json
-            'helloworld://',
-          ],
-        }}
-        onReady={() => {
-          SplashScreen.hideAsync();
-        }}
-      />
-    </SafeAreaProvider>
+    <QueryClientProvider client={queryClient}>
+      <ClerkProviderWrapper>
+        <PaperProvider theme={paperTheme}>
+          <SafeAreaProvider>
+            <Navigation
+              theme={navigationTheme}
+              linking={{
+                enabled: 'auto',
+                prefixes: [
+                  // Change the scheme to match your app's scheme defined in app.json
+                  'helloworld://',
+                ],
+              }}
+              onReady={() => {
+                SplashScreen.hideAsync();
+              }}
+            />
+          </SafeAreaProvider>
+        </PaperProvider>
+      </ClerkProviderWrapper>
+    </QueryClientProvider>
   );
 }
