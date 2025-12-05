@@ -10,10 +10,11 @@ import { PaperProvider } from 'react-native-paper';
 import './i18n/config';
 
 import { Colors } from './constants/Colors';
-import { Navigation } from './navigation';
 import { queryClient } from './config/queryClient';
 import { ClerkProviderWrapper } from './config/clerk';
 import { themes } from './config/themes';
+import { AuthWrapper } from './components/auth/AuthWrapper';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -47,19 +48,21 @@ export function App() {
       <ClerkProviderWrapper>
         <PaperProvider theme={paperTheme}>
           <SafeAreaProvider>
-            <Navigation
-              theme={navigationTheme}
-              linking={{
-                enabled: 'auto',
-                prefixes: [
-                  // Change the scheme to match your app's scheme defined in app.json
-                  'helloworld://',
-                ],
-              }}
-              onReady={() => {
-                SplashScreen.hideAsync();
-              }}
-            />
+            <ErrorBoundary>
+              <AuthWrapper
+                theme={navigationTheme}
+                linking={{
+                  enabled: 'auto',
+                  prefixes: [
+                    // Change the scheme to match your app's scheme defined in app.json
+                    'helloworld://',
+                  ],
+                }}
+                onReady={() => {
+                  SplashScreen.hideAsync();
+                }}
+              />
+            </ErrorBoundary>
           </SafeAreaProvider>
         </PaperProvider>
       </ClerkProviderWrapper>
